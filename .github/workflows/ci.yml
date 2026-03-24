@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  IMAGE_NAME: modelready-api
+  IMAGE_NAME: fastapi-greet
 
 jobs:
   build-and-push:
