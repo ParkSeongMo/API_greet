@@ -13,7 +13,17 @@ class GreetRequest(BaseModel):
 def health_check():
     return {"status": "ok"}
 
-
+@app.get("/ready")
+def ready_check():
+    # 1) 필수 의존성 점검 (현재 없으면 바로 ready)
+    # 예: DB ping, Redis ping, 내부 API 호출 등
+    is_ready = True  # 점검 결과로 바꾸기
+    # 2) 준비 안 됐으면 503 반환
+    if not is_ready:
+        raise HTTPException(status_code=503, detail="service not ready")
+    # 3) 준비 완료면 200 반환
+    return {"ready": True}
+ㄴ
 @app.post("/greet")
 def greet(payload: GreetRequest):
     name = payload.name.strip()
