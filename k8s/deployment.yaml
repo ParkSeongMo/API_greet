@@ -20,15 +20,15 @@ spec:
         - name: harbor
       containers:
         - name: app
-          image: dev.pineone.com:20444/uplus-mready/fastapi-greet:sha-4a63ac7
+          image: dev.pineone.com:20444/uplus-mready/fastapi-greet:latest
           imagePullPolicy: IfNotPresent
-          ports:
+          Ports:a
             - name: http
               containerPort: 8000
               protocol: TCP
           readinessProbe:
             httpGet:
-              path: /health
+              path: /ready
               port: http
             initialDelaySeconds: 5
             periodSeconds: 10
