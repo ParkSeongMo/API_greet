@@ -56,6 +56,6 @@ class DelayRequest(BaseModel):
 
 @app.post("/delay")
 async def delay_endpoint(payload: DelayRequest):
-    await asyncio.sleep(30)
+    await asyncio.sleep(payload.delay)
     return {"result": f"{payload.delay}초"}
 
