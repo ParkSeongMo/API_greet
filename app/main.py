@@ -10,7 +10,7 @@ app.state.is_ready = True
 app.state.ready_lock = Lock()
 
 
-class GreetRequest(BaseModel):
+class IntroduceRequest(BaseModel):
     name: str
 
 
