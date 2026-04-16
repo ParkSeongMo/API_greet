@@ -20,7 +20,7 @@ spec:
         - name: harbor
       containers:
         - name: app
-          image: dev.pineone.com:20444/uplus-mready/fastapi-greet:sha-4e5310b
+          image: dev.pineone.com:20444/uplus-mready/fastapi-greet:sha-cdb4221
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
