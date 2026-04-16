@@ -34,6 +34,7 @@ def ready_check():
 
 class ReadyUpdateRequest(BaseModel):
     ready: bool
+    
 
 @app.post("/ready")
 def set_ready(payload: ReadyUpdateRequest):
