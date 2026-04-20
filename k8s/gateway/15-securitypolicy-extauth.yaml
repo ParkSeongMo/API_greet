@@ -1,0 +1,28 @@
+# 파일: 15-securitypolicy-extauth.yaml
+# 적용 순서: 10-referencegrant-uplus-mready-gateway 적용 후 본 파일
+# 역할: parksmo-textvision-gateway(Gateway) 전체 트래픽(하위 모든 HTTPRoute)에 외부 인증(extAuth) 적용
+# 인증 백엔드: uplus-mready-model/maas-ops-service:8080 (path: /auth)
+# 전달 헤더: x-api-key
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: parksmo-textvision-gateway-extauth
+  namespace: uplus-mready-gateway
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: parksmo-textvision-gateway
+  extAuth:
+    # HTTP ext auth 기본 전달 헤더에 x-api-key가 없어 명시 필요
+    headersToExtAuth:
+      - x-api-key
+    http:
+      backendRefs:
+        - name: maas-ops-service
+          namespace: uplus-mready-model
+          port: 8080
+      path: /auth
+      # 인증 성공 시 원 요청에서 백엔드(모델 서비스)로 전달할 헤더(필요 시)
+      headersToBackend:
+        - x-api-key

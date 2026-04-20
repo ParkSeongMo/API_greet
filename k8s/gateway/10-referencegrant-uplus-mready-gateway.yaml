@@ -1,0 +1,19 @@
+# 파일: 10-referencegrant-uplus-mready-gateway.yaml
+# 적용 순서: Gateway/HTTPRoute/SecurityPolicy 보다 먼저(교차 네임스페이스 Service 참조 허용)
+# 역할: uplus-mready-gateway 네임스페이스의 HTTPRoute/SecurityPolicy가 uplus-mready-model 네임스페이스의 Service를 backendRefs로 참조할 수 있도록 허용
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: ReferenceGrant
+metadata:
+  name: allow-uplus-mready-gateway-to-model-services
+  namespace: uplus-mready-model
+spec:
+  from:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      namespace: uplus-mready-gateway
+    - group: gateway.envoyproxy.io
+      kind: SecurityPolicy
+      namespace: uplus-mready-gateway
+  to:
+    - group: ""
+      kind: Service

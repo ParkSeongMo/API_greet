@@ -1,0 +1,41 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: BackendTrafficPolicy
+metadata:
+  name: {{ .Values.backendTrafficPolicy.gateway.name }}
+  namespace: {{ .Values.namespaces.gateway }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+  labels:
+    {{- include "maas-text-vision-gateway.labels" . | nindent 4 }}
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: {{ .Values.gateway.name }}
+  rateLimit:
+    global:
+      rules:
+        - limit:
+            requests: {{ .Values.backendTrafficPolicy.gateway.requestsPerMinute }}
+            unit: Minute
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: BackendTrafficPolicy
+metadata:
+  name: {{ .Values.backendTrafficPolicy.httpRoute.name }}
+  namespace: {{ .Values.namespaces.gateway }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  labels:
+    {{- include "maas-text-vision-gateway.labels" . | nindent 4 }}
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: {{ .Values.backendTrafficPolicy.httpRoute.routeName }}
+  rateLimit:
+    global:
+      rules:
+        - limit:
+            requests: {{ .Values.backendTrafficPolicy.httpRoute.requestsPerMinute }}
+            unit: Minute

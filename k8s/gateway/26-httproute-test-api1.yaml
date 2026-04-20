@@ -1,0 +1,26 @@
+# 파일: 26-httproute-test-api1.yaml
+# 역할: /test/api1 프리픽스 + URLRewrite 후 fastapi-greet (parksmo-textvision-gateway용)
+
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: parksmo-textvision-test-api1-route
+  namespace: uplus-mready-gateway
+spec:
+  parentRefs:
+    - name: parksmo-textvision-gateway
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /test/api1
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /
+      backendRefs:
+        - name: fastapi-greet
+          port: 8000
+          namespace: uplus-mready-model

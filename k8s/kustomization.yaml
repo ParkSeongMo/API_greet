@@ -1,0 +1,17 @@
+# 로컬/CI에서 kubectl -k 적용용. GitOps(Argo CD)는 charts/maas-text-vision-gateway Helm 차트를 사용합니다.
+# envoy-gateway-config.bak.yaml 은 백업이므로 포함하지 않습니다.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# 기본 정렬(kind 순)을 쓰면 Gateway/ReferenceGrant 순서가 깨질 수 있어 legacy 로 고정합니다.
+sortOptions:
+  order: legacy
+
+resources:
+  - gateway/00-gatewayclass.yaml
+  - gateway/10-referencegrant-uplus-mready-gateway.yaml
+  - gateway/01-gateway.yml
+  - gateway/15-securitypolicy-extauth.yaml
+  - gateway/21-backend-traffic-policy.yaml
+  - gateway/26-httproute-test-api1.yaml
+  - ingress/ingress.yaml

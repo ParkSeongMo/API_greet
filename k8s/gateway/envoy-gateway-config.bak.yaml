@@ -1,0 +1,29 @@
+apiVersion: v1
+data:
+  envoy-gateway.yaml: |
+    apiVersion: gateway.envoyproxy.io/v1alpha1
+    kind: EnvoyGateway
+    provider:
+      type: Kubernetes
+    gateway:
+      controllerName: gateway.envoyproxy.io/gatewayclass-controller
+    extensionApis:
+      enableEnvoyPatchPolicy: true
+kind: ConfigMap
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","data":{"envoy-gateway.yaml":"apiVersion: gateway.envoyproxy.io/v1alpha1\nkind: EnvoyGateway\nprovider:\n  type: Kubernetes\ngateway:\n  controllerName: gateway.envoyproxy.io/gatewayclass-controller\nextensionApis:\n  enableEnvoyPatchPolicy: true\n"},"kind":"ConfigMap","metadata":{"annotations":{},"name":"envoy-gateway-config","namespace":"uplus-mready-gateway"}}
+    meta.helm.sh/release-name: eg
+    meta.helm.sh/release-namespace: uplus-mready-gateway
+  creationTimestamp: "2026-03-26T05:20:04Z"
+  labels:
+    app.kubernetes.io/instance: eg
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: gateway-helm
+    app.kubernetes.io/version: v1.7.1
+    helm.sh/chart: gateway-helm-1.7.1
+  name: envoy-gateway-config
+  namespace: uplus-mready-gateway
+  resourceVersion: "5146723"
+  uid: 6760acb3-9fa7-438c-a51d-c1107d6e4e8d

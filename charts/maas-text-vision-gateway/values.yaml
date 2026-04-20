@@ -1,0 +1,69 @@
+# 기본 네임스페이스(교차 참조: Gateway/HTTPRoute vs 모델 Service)
+namespaces:
+  gateway: uplus-mready-gateway
+  model: uplus-mready-model
+
+gatewayClass:
+  name: envoy
+  controllerName: gateway.envoyproxy.io/gatewayclass-controller
+
+gateway:
+  name: parksmo-textvision-gateway
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+      allowedRoutes:
+        namespaces:
+          from: All
+
+referenceGrant:
+  name: allow-uplus-mready-gateway-to-model-services
+
+securityPolicy:
+  name: parksmo-textvision-gateway-extauth
+  extAuth:
+    headersToExtAuth:
+      - x-api-key
+    backend:
+      serviceName: maas-ops-service
+      port: 8080
+    path: /auth
+    headersToBackend:
+      - x-api-key
+
+backendTrafficPolicy:
+  gateway:
+    name: parksmo-textvision-backend-traffic-policy
+    requestsPerMinute: 150
+  httpRoute:
+    name: parksmo-textvision-test-api1-backend-traffic-policy
+    routeName: parksmo-textvision-test-api1-route
+    requestsPerMinute: 10
+
+httpRoute:
+  name: parksmo-textvision-test-api1-route
+  pathPrefix: /test/api1
+  backend:
+    serviceName: fastapi-greet
+    port: 8000
+
+ingress:
+  enabled: true
+  name: envoy-gw-ingress
+  className: nginx
+  rewriteTarget: /$2
+  # Envoy Gateway가 만든 Service 이름은 클러스터/릴리스마다 다릅니다. 배포 전 실제 이름으로 맞추세요.
+  rules:
+    - path: /gateway/parksmo(/|$)(.*)
+      serviceName: envoy-uplus-mready-gateway-parksmo-gateway-2dbd8411
+      port: 80
+    - path: /gateway/parkjw(/|$)(.*)
+      serviceName: envoy-uplus-mready-gateway-parkjw-gateway-dffe9399
+      port: 80
+    - path: /gateway/idpark(/|$)(.*)
+      serviceName: envoy-uplus-mready-gateway-idpark-gateway-8559a4bb
+      port: 80
+    - path: /gateway/textvision/parksmo(/|$)(.*)
+      serviceName: envoy-uplus-mready-gateway-parksmo-textvision-gateway-d5b19a52
+      port: 80

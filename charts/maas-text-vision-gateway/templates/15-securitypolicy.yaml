@@ -1,0 +1,25 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: {{ .Values.securityPolicy.name }}
+  namespace: {{ .Values.namespaces.gateway }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "-2"
+  labels:
+    {{- include "maas-text-vision-gateway.labels" . | nindent 4 }}
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: {{ .Values.gateway.name }}
+  extAuth:
+    headersToExtAuth:
+      {{- toYaml .Values.securityPolicy.extAuth.headersToExtAuth | nindent 6 }}
+    http:
+      backendRefs:
+        - name: {{ .Values.securityPolicy.extAuth.backend.serviceName }}
+          namespace: {{ .Values.namespaces.model }}
+          port: {{ .Values.securityPolicy.extAuth.backend.port }}
+      path: {{ .Values.securityPolicy.extAuth.path | quote }}
+      headersToBackend:
+        {{- toYaml .Values.securityPolicy.extAuth.headersToBackend | nindent 8 }}
