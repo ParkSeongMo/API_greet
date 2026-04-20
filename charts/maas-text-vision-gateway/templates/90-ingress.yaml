@@ -3,6 +3,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ .Values.ingress.name }}
+  namespace: {{ .Values.namespaces.gateway }}
   annotations:
     argocd.argoproj.io/sync-wave: "2"
     kubernetes.io/ingress.class: {{ .Values.ingress.className | quote }}
