@@ -8,7 +8,7 @@ gatewayClass:
   controllerName: gateway.envoyproxy.io/gatewayclass-controller
 
 gateway:
-  name: parksmo-textvision2-gateway
+  name: parksmo-textvision-gateway
   listeners:
     - name: http
       protocol: HTTP
@@ -21,7 +21,7 @@ referenceGrant:
   name: allow-uplus-mready-gateway-to-model-services
 
 securityPolicy:
-  name: parksmo-textvision2-gateway-extauth
+  name: parksmo-textvision-gateway-extauth
   extAuth:
     headersToExtAuth:
       - x-api-key
@@ -34,15 +34,15 @@ securityPolicy:
 
 backendTrafficPolicy:
   gateway:
-    name: parksmo-textvision2-backend-traffic-policy
+    name: parksmo-textvision-backend-traffic-policy
     requestsPerMinute: 150
   httpRoute:
-    name: parksmo-textvision2-test-api1-backend-traffic-policy
-    routeName: parksmo-textvision2-test-api1-route
+    name: parksmo-textvision-test-api1-backend-traffic-policy
+    routeName: parksmo-textvision-test-api1-route
     requestsPerMinute: 10
 
 httpRoute:
-  name: parksmo-textvision2-test-api1-route
+  name: parksmo-textvision-test-api1-route
   pathPrefix: /test/api1
   backend:
     serviceName: fastapi-greet
